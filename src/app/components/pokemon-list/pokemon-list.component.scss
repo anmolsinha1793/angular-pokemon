@@ -1,0 +1,37 @@
+
+
+  .pokemon__wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    mat-card-actions {
+        display: flex;
+        justify-content: center;
+      }
+      .customize__goto__pokemon {
+        height: 2rem;
+        width: 10rem;
+        font-size: 8px;
+      }
+      .example-card {
+    max-width: 400px;
+    max-width: 400px;
+    border-radius: 8px;
+    margin: 8px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+  
+  .example-header-image {
+    background-size: cover;
+  }
+  }
+
+  .paginator__wrapper {
+    display: flex;
+    justify-content: center;
+  }
+.spinner__wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}

@@ -1,0 +1,41 @@
+
+<div class="summary__wrapper">
+    @defer (when pokemonData) {
+        <div class="image__section">
+            <img [src]="pokemonData.image" alt="">
+        </div>
+        <div class="attributes__wrapper">
+            <div class="abilities">
+               <h3>Abilities</h3>
+                <mat-chip-listbox aria-label="Abilities section">
+                @for (item of pokemonData.abilities; track $index) {
+                        <mat-chip-option selected color="primary">{{item}}</mat-chip-option>
+                }
+            </mat-chip-listbox>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="moves">
+                <h3>Moves</h3>
+                <mat-chip-listbox aria-label="Moves section">
+                    @for (item of pokemonData.moves; track $index) {
+                            <mat-chip-option selected color="primary">{{item}}</mat-chip-option>
+                    }
+                </mat-chip-listbox>
+            </div>
+            <mat-divider></mat-divider>
+            <div>
+                <h3>Height</h3>
+                <mat-chip-option selected color="primary">{{pokemonData.height}}</mat-chip-option>
+                
+            </div>
+            <mat-divider></mat-divider>
+            <div>
+                <h3>Weight</h3>
+                <mat-chip-option selected color="primary">{{pokemonData.weight}}</mat-chip-option>
+            </div>
+        </div>
+    } @placeholder {
+            <div>No data</div>
+    }
+   
+</div>

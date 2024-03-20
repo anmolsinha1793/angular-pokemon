@@ -25,3 +25,18 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Features implemented/incorporated
+
+* Lazy Loading
+* Various rxjs operators like switchMap, ConcatMap, takeUntil
+* use of flow control of angular like @for, @if
+* use of angular material to get a cleaner look
+* cleanup done in ngdestroy lifecycle hook
+* implementation of fallback route using wildcard
+* implementation of subject, behaviour subject to store data
+* use of deferred views for angular
+* Interfaces for strict type checking
+* standalone components
+* clean folder structure
+* usage of constant files for storing constants
