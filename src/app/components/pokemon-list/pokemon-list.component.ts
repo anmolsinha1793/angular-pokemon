@@ -35,7 +35,7 @@ errorText:string = '';
   }
   // made use of rxjs operator concatmap to avoid nesting of subscriptions
   fetchPokemonList(): void {
-    const offset = (this.currentPage)*20;
+    const offset = (this.currentPage)*AppConstants.technicalAdjustment;
     this.isContentLoaded = false;
     const selectedApi = this.isInitialLoad ? this.fetchPokemonService.fetchAllPokemons() : this.fetchPokemonService.makeNextPageCalls(offset);
     selectedApi.pipe(concatMap((res: IInitialData) => {
@@ -58,12 +58,12 @@ errorText:string = '';
       this.fetchPokemonService.getPokemonDetails(el.url).subscribe({
         next: (poke: IResultData) => {
           this.pokemonData.push(this.utilsService.handlePokemonListCreation(poke));
+              // storing values into behavior subject so that those can be accessed later
+          this.utilsService.setPokemonList(this.pokemonData);
         }
       });
     });
     this.isContentLoaded = true;
-    // storing values into behavior subject so that those can be accessed later
-    this.utilsService.setPokemonList(this.pokemonData);
     return of(res);
   }
 

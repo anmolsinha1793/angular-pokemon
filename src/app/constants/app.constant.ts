@@ -4,5 +4,6 @@ export const AppConstants = {
     headerText: 'The Pokemon Center',
     totalItems: 100,
     pageSize: 20,
-    currentPage: 0
+    currentPage: 0,
+    technicalAdjustment: 20
 }
