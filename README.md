@@ -40,3 +40,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 * standalone components
 * clean folder structure
 * usage of constant files for storing constants
+* used basic features like @input
+* deployed app to https://anmolsinha1793.github.io/angular-pokemon/home
