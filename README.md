@@ -42,3 +42,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 * usage of constant files for storing constants
 * used basic features like @input
 * deployed app to https://anmolsinha1793.github.io/angular-pokemon/home
+* updated testing framework from jasmine to jest but would need more time to write unit test cases for the component since those involve detailed stubbing.
