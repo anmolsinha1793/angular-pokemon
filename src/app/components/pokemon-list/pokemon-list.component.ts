@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FetchPokemonService } from '../../services/fetch-pokemon.service';
 import { UtilsService } from '../../services/utils.service';
 import { PageEvent } from '@angular/material/paginator';
-import { Observable, Subject, concatMap, of, takeUntil } from 'rxjs';
+import { Observable, Subject, concatMap, forkJoin, of, takeUntil, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { IInitialData, IResultData } from '../../interface/initialData.interface';
 import { MaterialModule } from '../../modules/material/material.module';
@@ -38,11 +38,15 @@ errorText:string = '';
     const offset = (this.currentPage)*AppConstants.technicalAdjustment;
     this.isContentLoaded = false;
     const selectedApi = this.isInitialLoad ? this.fetchPokemonService.fetchAllPokemons() : this.fetchPokemonService.makeNextPageCalls(offset);
-    selectedApi.pipe(concatMap((res: IInitialData) => {
+    selectedApi.pipe(tap((res) => {this.totalItems = res.count;}),concatMap((res: IInitialData) => {
       return this.handlePokemonListCreation(res);
     }),takeUntil(this.unSubscription$)).subscribe({
-      next: (data: IInitialData) => {
-        this.totalItems = data.count;
+      next: (data: IResultData[]|any) => {
+        data?.forEach((poke: IResultData) => {
+          this.pokemonData.push(this.utilsService.handlePokemonListCreation(poke));
+          // storing values into behavior subject so that those can be accessed later
+          this.utilsService.setPokemonList(this.pokemonData);
+        })
         this.isError = false;
         this.errorText = '';
       },
@@ -53,18 +57,10 @@ errorText:string = '';
     })
   }
 
-  handlePokemonListCreation(res: IInitialData): Observable<IInitialData> {
-    res.results.forEach((el: { name: string; url: string; }) => {
-      this.fetchPokemonService.getPokemonDetails(el.url).subscribe({
-        next: (poke: IResultData) => {
-          this.pokemonData.push(this.utilsService.handlePokemonListCreation(poke));
-              // storing values into behavior subject so that those can be accessed later
-          this.utilsService.setPokemonList(this.pokemonData);
-        }
-      });
-    });
+  handlePokemonListCreation(res: IInitialData): Observable<IInitialData|IResultData[]> {
+    const apis = res.results.map((el: { name: string; url: string; }) => this.fetchPokemonService.getPokemonDetails(el.url));
     this.isContentLoaded = true;
-    return of(res);
+    return forkJoin(apis);
   }
 
   navigate(id: number): void {
