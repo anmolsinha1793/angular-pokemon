@@ -1,18 +1,21 @@
 
-<div class="evolution__wrapper">
-    @for (item of evolutionChain; track $index; let last = $last; ) {
-        <mat-card class="example-card">
-            <mat-card-header>
-              <mat-card-title>Evolution stage {{$index+1}}</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <h2>{{ item }}</h2>
-            </mat-card-content>
-          </mat-card>
-          @if (!last) {
-            <!-- <mat-icon>trending_flat</mat-icon> -->
-            <span class="styleArrow">&#10230;</span>
-          }
-       
-    }
-</div>
+@if(!isError) {
+    <div class="evolution__wrapper">
+        @for (item of evolutionChain; track $index; let last = $last; ) {
+            <mat-card class="example-card">
+                <mat-card-header>
+                  <mat-card-title>Evolution stage {{$index+1}}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <h2>{{ item }}</h2>
+                </mat-card-content>
+              </mat-card>
+              @if (!last) {
+                <span class="styleArrow">&#10230;</span>
+              }
+        }
+    </div>
+} @else {
+    {{errorText}}
+}
+

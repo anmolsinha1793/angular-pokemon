@@ -1,37 +1,41 @@
 
-
-@defer(when isContentLoaded) {
-    <div class="pokemon__list__wrapper">
-        <div class="pokemon__wrapper">
-            @for (item of pokemonData; track $index) { 
-               
-                    <mat-card class="example-card">
-                        <mat-card-header>
-                          <div mat-card-avatar class="example-header-image" [ngStyle]="{'background-image': 'url(' + item.image + ')'}">
-                        </div>
-                          <mat-card-title>{{item.name}}</mat-card-title>
-                          <mat-card-subtitle>Breed: {{item.name}}</mat-card-subtitle>
-                        </mat-card-header>
-                        <img mat-card-image class="customize__image" [src]="item.image" [alt]="item.name">
-                        <mat-card-actions>
-                          <button mat-raised-button class="customize__goto__pokemon" color="primary" (click)="navigate(item.id)">Navigate to the pokemon</button>
-                        </mat-card-actions>
-                      </mat-card>
-                    
-                  
-            }
-            </div>
+@if (!isError) {
+    @defer(when isContentLoaded) {
+        <div class="pokemon__list__wrapper">
+            <div class="pokemon__wrapper">
+                @for (item of pokemonData; track $index) { 
+                   
+                        <mat-card class="example-card">
+                            <mat-card-header>
+                              <div mat-card-avatar class="example-header-image" [ngStyle]="{'background-image': 'url(' + item.image + ')'}">
+                            </div>
+                              <mat-card-title>{{item.name}}</mat-card-title>
+                              <mat-card-subtitle>Breed: {{item.name}}</mat-card-subtitle>
+                            </mat-card-header>
+                            <img mat-card-image class="customize__image" [src]="item.image" [alt]="item.name">
+                            <mat-card-actions>
+                              <button mat-raised-button class="customize__goto__pokemon" color="primary" (click)="navigate(item.id)">Navigate to the pokemon</button>
+                            </mat-card-actions>
+                          </mat-card>
+                        
+                      
+                }
+                </div>
+        
+        
+        <div class="paginator__wrapper">
+            <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageIndex]="currentPage" (page)="pageChanged($event)"></mat-paginator>
+        </div>
+        
+        </div>
+    }
+    @placeholder {
+        <div class="spinner__wrapper">
+            <mat-spinner></mat-spinner>
+        </div>
     
-    
-    <div class="paginator__wrapper">
-        <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageIndex]="currentPage" (page)="pageChanged($event)"></mat-paginator>
-    </div>
-    
-    </div>
+    }
+} @else {
+    {{errorText}}
 }
-@placeholder {
-    <div class="spinner__wrapper">
-        <mat-spinner></mat-spinner>
-    </div>
 
-}

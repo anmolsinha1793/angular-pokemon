@@ -1,17 +1,21 @@
-<mat-tab-group>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <img class="customize__icon" src="../../../../../assets/strength.png" alt="strength and abilities">
-        Strengths and Abilities
-      </ng-template>
-      <app-pokemon-summary [pokemonData]="pokemonData"></app-pokemon-summary>
-    </mat-tab>
-  
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <img class="customize__icon" src="../../../../../assets/evo.png" alt="evolution">
-        Evolution
-      </ng-template>
-      <app-pokemon-evolution [id]="id"></app-pokemon-evolution>
-    </mat-tab>
-  </mat-tab-group>
+@if (!isError) {
+    <mat-tab-group>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <img class="customize__icon" src="assets/strength.png" alt="strength and abilities">
+            Strengths and Abilities
+          </ng-template>
+          <app-pokemon-summary [pokemonData]="pokemonData"></app-pokemon-summary>
+        </mat-tab>
+      
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <img class="customize__icon" src="assets/evo.png" alt="evolution">
+            Evolution
+          </ng-template>
+          <app-pokemon-evolution [id]="id"></app-pokemon-evolution>
+        </mat-tab>
+      </mat-tab-group>
+} @else {
+    {{errorText}}
+}

@@ -18,15 +18,15 @@ export class UtilsService {
     this.pokemonList$.next(data);
   }
   handlePokemonListCreation(poke: any) {
-    const obj: any = {};
-    obj.name = poke.name;
-    obj.height = poke.height;
-    obj.weight = poke.weight;
-    obj.image = poke.sprites.other['official-artwork'].front_default;
-    obj.abilities = poke.abilities.reduce((acc: [], el: any) => acc.concat(el.ability.name) ,[]);
-    obj.moves = poke.moves.reduce((acc: [], el: any,i: number) => i<9 ? acc.concat(el.move.name) : acc ,[]);
-    obj.id = poke.id;
-    return obj;
+    const pokemonListobj: any = {};
+    pokemonListobj.name = poke.name;
+    pokemonListobj.height = poke.height;
+    pokemonListobj.weight = poke.weight;
+    pokemonListobj.image = poke.sprites.other['official-artwork'].front_default;
+    pokemonListobj.abilities = poke.abilities.reduce((acc: [], el: any) => acc.concat(el.ability.name) ,[]);
+    pokemonListobj.moves = poke.moves.reduce((acc: [], el: any,i: number) => i<9 ? acc.concat(el.move.name) : acc ,[]);
+    pokemonListobj.id = poke.id;
+    return pokemonListobj;
   }
 
 }

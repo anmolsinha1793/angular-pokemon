@@ -1,70 +1,82 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FetchPokemonService } from '../../services/fetch-pokemon.service';
 import { UtilsService } from '../../services/utils.service';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { Subject, concatMap, of, takeUntil } from 'rxjs';
-import {MatCardModule} from '@angular/material/card';
-import {MatButtonModule} from '@angular/material/button';
-import { CommonModule } from '@angular/common';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { PageEvent } from '@angular/material/paginator';
+import { Observable, Subject, concatMap, of, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { IInitialData, IResultData } from '../../interface/initialData.interface';
+import { MaterialModule } from '../../modules/material/material.module';
+import { AppConstants } from '../../constants/app.constant';
 
 
 @Component({
   selector: 'app-pokemon-list',
   standalone: true,
-  imports: [MatPaginatorModule, MatCardModule, MatButtonModule, CommonModule, MatProgressSpinnerModule],
+  imports: [MaterialModule],
   templateUrl: './pokemon-list.component.html',
-  styleUrl: './pokemon-list.component.scss'
+  styleUrls: ['./pokemon-list.component.scss']
 })
-export class PokemonListComponent implements OnInit {
-totalItems = 100;
-pageSize = 20;
-currentPage = 0;
+export class PokemonListComponent implements OnInit, OnDestroy {
+totalItems = AppConstants.totalItems;
+pageSize = AppConstants.pageSize;
+currentPage = AppConstants.currentPage;
 pokemonData:any = [];
-isContentLoaded = false;
-isInitialLoad = true;
+isContentLoaded:boolean = false;
+isInitialLoad:boolean = true;
 unSubscription$ = new Subject();
+isError:boolean = false;
+errorText:string = '';
 
   constructor(private fetchPokemonService: FetchPokemonService, private utilsService: UtilsService, private router: Router) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.fetchPokemonList();
     this.isInitialLoad = false;
   }
-  fetchPokemonList() {
-    const offset = (this.currentPage)*20
+  // made use of rxjs operator concatmap to avoid nesting of subscriptions
+  fetchPokemonList(): void {
+    const offset = (this.currentPage)*20;
     this.isContentLoaded = false;
-    const ref = this.isInitialLoad ? this.fetchPokemonService.fetchAllPokemons() : this.fetchPokemonService.makeNextPageCalls(offset);
-    ref.pipe(concatMap((res: IInitialData) => {
-      res.results.forEach((el: {name: string, url: string}) => {
-        this.fetchPokemonService.getPokemonDetails(el.url).subscribe({
-          next: (poke: IResultData) => {
-            this.pokemonData.push(this.utilsService.handlePokemonListCreation(poke));
-          }
-        });
-      });
-      this.isContentLoaded = true;
-      this.utilsService.setPokemonList(this.pokemonData);
-      return of(res);
+    const selectedApi = this.isInitialLoad ? this.fetchPokemonService.fetchAllPokemons() : this.fetchPokemonService.makeNextPageCalls(offset);
+    selectedApi.pipe(concatMap((res: IInitialData) => {
+      return this.handlePokemonListCreation(res);
     }),takeUntil(this.unSubscription$)).subscribe({
       next: (data: IInitialData) => {
         this.totalItems = data.count;
+        this.isError = false;
+        this.errorText = '';
+      },
+      error: (error) => {
+        this.isError = true;
+        this.errorText = error;
       }
     })
   }
 
-  navigate(id: number) {
+  handlePokemonListCreation(res: IInitialData): Observable<IInitialData> {
+    res.results.forEach((el: { name: string; url: string; }) => {
+      this.fetchPokemonService.getPokemonDetails(el.url).subscribe({
+        next: (poke: IResultData) => {
+          this.pokemonData.push(this.utilsService.handlePokemonListCreation(poke));
+        }
+      });
+    });
+    this.isContentLoaded = true;
+    // storing values into behavior subject so that those can be accessed later
+    this.utilsService.setPokemonList(this.pokemonData);
+    return of(res);
+  }
+
+  navigate(id: number): void {
     this.router.navigate([`pokemon-details/${id}`]);
   }
-  pageChanged(event: PageEvent) {
+  pageChanged(event: PageEvent): void {
     this.currentPage = event.pageIndex;
     this.pokemonData = [];
     this.utilsService.setPokemonList([]);
     this.fetchPokemonList();
   }
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unSubscription$.next(0);
     this.unSubscription$.complete();
   }

@@ -18,7 +18,7 @@ export class FetchPokemonService {
     return this.http.get<IResultData[]>(`${apiList.fetchAllPokemons}${id}`);
   }
   makeNextPageCalls(offset: number): Observable<IInitialData> {
-    return this.http.get<IInitialData>(`${apiList.fetchAllPokemons}?offset=${offset}&limit=20'`);
+    return this.http.get<IInitialData>(`${apiList.fetchAllPokemons}?offset=${offset}&limit=20`);
   }
   getPokemonDetails(url: string): Observable<IResultData> {
     return this.http.get<IResultData>(url);
